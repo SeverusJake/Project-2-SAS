@@ -3,8 +3,8 @@
 return [
 
     'version'               => 'Version',
-    'powered'               => 'Powered By Akaunting',
-    'link'                  => 'https://akaunting.com',
+    'powered'               => 'Powered By sas',
+    'link'                  => 'https://sas.com',
     'software'              => 'Free Accounting Software',
 
 ];

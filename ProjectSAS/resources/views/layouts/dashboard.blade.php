@@ -12,15 +12,32 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
 
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('img/logo.jpg') }}" type="image/png">
+
+    <!-- Font -->
+    <link rel="stylesheet" href="{{ asset('vendor/opensans/css/opensans.css?v=') }}" type="text/css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="{{ asset('vendor/nucleo/css/nucleo.css?v=') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css?v=') }}" type="text/css">
+
     <!-- Css -->
-    <link rel="stylesheet" href="{{ asset('css/argon.css?v=2.1.16') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('css/akaunting-color.css?v=2.1.16') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('css/custom.css?v=2.1.16') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/argon.css?v=') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/sas_color.css?v=') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/custom.css?v=') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/element.css?v=') }}" type="text/css">
+
+    <script>
+        window.Laravel = {
+            "csrfToken": "{{ csrf_token() }}"
+        }
+
+    </script>
 
 </head>
 
 <body id="leftMenu" class="g-sidenav-show">
-
 
     <nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-default" id="sidenav-main">
         <div class="scrollbar-inner">
@@ -29,7 +46,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="avatar menu-avatar background-unset">
-                                <img class="border-radius-none border-0 mr-3" alt="Akaunting" src="{{ asset('img/akaunting-logo-white.svg') }}">
+                                <img class="border-radius-none border-0 mr-3" alt="sas" src="{{ asset('img/logo.jpg') }}">
                             </span>
                             <span class="nav-link-text long-texts pl-2 mwpx-100">SAS Company</span>
                             <i class="fas fa-sort-down pl-2"></i>
@@ -102,45 +119,24 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#navbar-banking" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-banking">
-                                <i class="fa fa-briefcase"></i>
-                                <span class="nav-link-text">Payment Method</span>
-                            </a>
-                            <div class="collapse" id="navbar-banking">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item"> <a class="nav-link" href="/customers/index"> <span class="nav-link-text">QR
-                                                Code</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href=""> <span class="nav-link-text">Bank
-                                                Transfers</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href=""> <span class="nav-link-text">Cash</span> </a></li>
-
-                                </ul>
-                            </div>
-                        </li>
                         <li class="nav-item"> <a class="nav-link" href=""><i class="fa fa-chart-pie"></i> <span class="nav-link-text">Reports</span> </a></li>
                     </ul>
                 </div>
             </div>
-
         </div>
     </nav>
 
     <div class="main-content" id="panel">
-
         <nav class="navbar navbar-top navbar-expand navbar-dark border-bottom">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
                     <form class="navbar-search navbar-search-light form-inline mb-0" id="navbar-search-main" autocomplete="off">
                         <div class="form-group mb-0 mr-sm-3">
                             <div class="input-group input-group-alternative input-group-merge">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-search"></i></span>
                                 </div>
-
                                 <input type="text" name="search" class="form-control" autocomplete="off" placeholder="Search">
-
                             </div>
                         </div>
                     </form>
@@ -298,7 +294,14 @@
                     <div class="header-body">
                         <div class="row py-4 align-items-center">
                             <div class="col-xs-12 col-sm-4 col-md-5 align-items-center">
-                                <h2 class="d-inline-flex mb-0 long-texts">@yield('title')</h2>
+                                {{-- Title --}}
+                                <h2 class="d-inline-flex mb-0 long-texts"> @yield('title') </h2>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-7">
+                                <div class="text-right">
+                                    {{-- Add New Button --}}
+                                    @yield('addnew')
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -306,19 +309,23 @@
             </div>
 
             <div class="container-fluid content-layout mt--6">
-                @yield('content')
+                <div id="app">
+
+                    {{-- Content Section --}}
+                    @yield('content')
+
+                </div>
 
                 <footer class="footer">
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
                             <div class="text-sm float-left text-muted footer-texts">
-                                Powered By SAS: <a href="" target="_blank" class="text-muted">LKPD
-                                    Corporate</a>
+                                Powered By SAS: LKPD Corporate
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-6">
                             <div class="text-sm float-right text-muted footer-texts">
-                                Version 1.0.0
+                                Version 1.4.1
                             </div>
                         </div>
                     </div>
@@ -332,23 +339,25 @@
     <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('vendor/js-cookie/js.cookie.js') }}"></script>
 
-    <script src="{{ asset('js/common/dashboards.js?v=2.1.16') }}"></script>
+    {{-- <script src="{{ asset('js/common/items.js?v=2.1.16') }}"></script> --}}
 
+    {{-- <script src="{{ asset('js/common/documents.js?v=2.1.16') }}"></script> --}}
 
     <script src="{{ asset('vendor/chart.js/dist/Chart.min.js') }}"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts-en.min.js" charset=utf-8></script>
 
     {{-- Link database --}}
-
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js">
+    </script>
     {{-- End Link database --}}
 
-    <!-- Argon -->
+    @yield('script')
+
+
+    <!-- Side Navbar Dashboard -->
     <script type="text/javascript">
         'use strict';
-
         var Layout = (function() {
             function pinSidenav() {
                 $('.sidenav-toggler').addClass('active');
@@ -465,6 +474,7 @@
         })();
 
     </script>
+
 </body>
 
 </html>

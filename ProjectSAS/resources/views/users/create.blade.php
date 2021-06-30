@@ -1,78 +1,173 @@
 @extends('layouts.dashboard')
+@section('title')
+    @if($isUpdate)
+        {{ $isUpdate }} User
+    @else
+        New User
+    @endif
+    @endsection
 @section('content')
 
-        <div class="container">
+@php
+$department = $isUpdate ? substr($users->role,0,-1) : '';
+$admin = $isUpdate ? substr($users->role,-1) : '2';
+$active = $isUpdate ? $users->active : '1';
 
+
+@endphp
+
+<div class="card">
+    <form method="POST" action="{{ $isUpdate ? '/users/update' : '' }}">
+        @csrf
+        <div class="card-body">
             <div class="row">
-                <div class="col text-center">
-                    <h3>New User</h3>
+                {{-- Username --}}
+
+                <div class="form-group col-md-12">
+                    <strong>
+                        {{ $isUpdate ? 'UserID:'. $users->userID : '' }}
+                        <input type="hidden" name="userID" value="{{ $isUpdate ? $users->userID : '' }}">
+
+                    </strong>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <form action="" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="userName" placeholder="Enter Username">
+
+
+                <div class="form-group col-md-6">
+                    <label for="username" class="form-control-label">Username</label>
+                    <div class="input-group input-group-merge ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-user"></i>
+                            </span>
                         </div>
-                        <div class="form-group">
-                            <input type="password" class="form-control" name="password" placeholder="Enter Password">
+                        <input class="form-control" placeholder="Enter Username" name="username" id="username" value="{{ $isUpdate ? $users->userName : '' }}">
+                    </div>
+                </div>
+
+                {{-- Email --}}
+                <div class="form-group col-md-6">
+                    <label for="email" class="form-control-label">Email</label>
+
+                    <div class="input-group input-group-merge ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-envelope"></i>
+                            </span>
                         </div>
-                        <div class="form-group">
-                            <select class="custom-select" name="department" id="department">
-                                <option selected>Select Department</option>
-                                <option value="SA">Sales</option>
-                                <option value="LO">Logistics</option>
-                                <option value="HR">Human Resource</option>
-                                <option value="AC">Accounting</option>
-                            </select>
+                        <input type="email" class="form-control" placeholder="Enter Email" name="email" id="email" value="{{ $isUpdate ? $users->email : '' }}">
+                    </div>
+                </div>
+
+                {{-- Password --}}
+                <div class="form-group col-md-12">
+                    <label for="password" class="form-control-label">Password</label>
+
+                    <div class="input-group input-group-merge ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password" value="{{ $isUpdate ? $users->password : '' }}">
+                    </div>
+                </div>
+
+                {{-- Full name --}}
+                <div class="form-group col-md-6">
+                    <label for="fullname" class="form-control-label">Fullname</label>
+                    <div class="input-group input-group-merge ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Enter Fullname" name="fullname" id="fullname" value="{{ $isUpdate ? $users->fullname : '' }}">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="department" class="form-control-label">Department</label>
+
+                    <div class="input-group input-group-merge ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-address-card"></i>
+                            </span>
                         </div>
 
-                        <div class="form-group custom-control custom-switch mx-5">
-                            <input id="adminRole" class="custom-control-input" type="checkbox" name="adminRole" value="1">
-                            <label for="adminRole" class="custom-control-label">Admin</label>
-                        </div>
+                        <select class="custom-select" name="department" id="department">
+                            <option selected>Select Department</option>
+                            <option value="SA" @if($department=="SA" )selected @endif>Sales</option>
+                            <option value="LO" @if($department=="LO" )selected @endif>Logistics</option>
+                            <option value="HR" @if($department=="HR" )selected @endif>Human Resource</option>
+                            <option value="AC" @if($department=="AC" )selected @endif>Accounting</option>
+                        </select>
+                    </div>
+                </div>
 
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="fullname" placeholder="Enter Full Name">
+                <div class="form-group col-md-6">
+                    <label for="phone" class="form-control-label">Phone</label>
+
+                    <div class="input-group input-group-merge ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-phone"></i>
+                            </span>
                         </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="email" placeholder="Enter Email">
+                        <input type="text" class="form-control" placeholder="Enter Phone" name="phone" id="phone" value="{{ $isUpdate ? $users->phone : '' }}">
+                    </div>
+                </div>
+                {{-- Description --}}
+                <div class="form-group col-md-12">
+                    <label for="description" class="form-control-label">Description</label>
+                    <textarea class="form-control" placeholder="Enter description" name="description" id="description" value="{{ $isUpdate ? $users->description : ''}}"></textarea>
+                </div>
+                {{-- Admin --}}
+                <div class="form-group col-md-6">
+                    <label for="admin" class="form-control-label">Admin</label>
+                    <div role="tabpanel" class="tab-pane fade show active">
+                        <div data-toggle="buttons" class="btn-group btn-group-toggle radio-yes-no">
+                            <label class="btn btn-success @if($admin==1 ) active @endif">
+                                Yes
+                                <input type="radio" name="admin" id="admin-1" value="1"></label>
+                            <label class="btn btn-danger @if($admin==2 || $admin==0 ) active @endif">
+                                No
+                                <input type="radio" name="admin" id="admin-2" value="2"></label>
                         </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="phone" placeholder="Enter Phone">
-                        </div>
-                        <div class="form-group form-check form-check-inline">
-                            <label class="form-check-label mx-2">
-                                <input class="form-check-input" type="radio" name="active" id="active" value="1" checked>
+                    </div>
+                </div>
+                {{-- Active --}}
+                <div class="form-group col-md-6">
+                    <label for="active" class="form-control-label">Active</label>
+                    <div role="tabpanel" class="tab-pane fade show active">
+                        <div data-toggle="buttons" class="btn-group btn-group-toggle radio">
+                            <label class="btn btn-success @if($active==1 ) focus active @endif">
                                 Active
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input class="form-check-input" type="radio" name="active" id="inactive" value="2"> Inactive
-                            </label>
-                            <label class="form-check-label mx-2">
-                                <input class="form-check-input" type="radio" name="active" id="block" value="3"> Block
-                            </label>
+                                <input type="radio" name="active" id="active-1" value="1" @if($active==1)checked @endif></label>
+                            <label class="btn btn-danger @if($active==2 ) focus active @endif">
+                                Inactive
+                                <input type="radio" name="active" id="active-2" value="2" @if($active==2)checked @endif></label>
+                            <label class="btn btn-warning @if($active==3 ) focus active @endif">
+                                Block
+                                <input type="radio" name="active" id="active-3" value="3" @if($active==3)checked @endif></label>
                         </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="description" placeholder="Enter Description">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="reset" class="btn btn-danger">Reset</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-        </script>
+
+        <div class="card-footer">
+            <div class="row save-buttons">
+                <div class="col-md-12">
+                    <a href="/users/index" class="btn btn-primary">Cancel</a>
+                    <button type="reset" class="btn btn-icon btn-danger">Clear</button>
+                    <button type="submit" class="btn btn-icon btn-success">Submit</button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
 
 @endsection

@@ -25,7 +25,9 @@ class SaleOrderController extends Controller
      */
     public function create()
     {
-        return view('saleorders.create');
+        $customers = DB::table('customers')->get();
+        $products = DB::table('products')->get();
+        return view('saleorders.create',compact('customers','products'));
     }
 
     /**

@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        return view('users.create')->with('isUpdate',false);
     }
 
     /**
@@ -37,17 +37,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $userName = $request->input('userName');
+        $username = $request->input('username');
         $password = $request->input('password');
-        $adminRole = $request->input('adminRole')==1 ? 1 : 2;
-        $role = $request->input('department') . $adminRole;
+        $admin = $request->input('admin')==1 ? 1 : 2;
+        $role = $request->input('department') . $admin;
         $fullname = $request->input('fullname');
         $email = $request->input('email');
         $phone = $request->input('phone');
         $active = $request->input('active');
         $description = $request->input('description');
         DB::table('users')->insert([
-            'userName' => $userName,
+            'userName' => $username,
             'password' => $password,
             'role' => $role,
             'fullname' => $fullname,
@@ -57,7 +57,7 @@ class UserController extends Controller
             'description' => $description
         ]);
         if($request->all()){
-            return redirect()->route('users.index')->with('success',"Created new User successfully!");
+            return redirect()->route('users.index')->with('success',"Created new user successfully!");
         }
     }
 
@@ -69,7 +69,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $users = DB::table('users')->where(['userID'=>$id])->first();
+        return view('users.create')->with([
+            'isUpdate' => 'Show',
+            'users' => $users
+        ]);
     }
 
     /**
@@ -80,7 +84,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $users = DB::table('users')->where(['userID'=>$id])->first();
+        return view('users.create')->with([
+            'isUpdate' => 'Update',
+            'users' => $users
+        ]);
     }
 
     /**
@@ -90,9 +98,33 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $userID = $request->input('userID');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $admin = $request->input('admin')==1 ? 1 : 2;
+        $role = $request->input('department') . $admin;
+        $fullname = $request->input('fullname');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $active = $request->input('active');
+        $description = $request->input('description');
+        DB::table('users')
+        ->where('userID', intval($userID))
+        ->update([
+            'userName' => $username,
+            'password' => $password,
+            'role' => $role,
+            'fullname' => $fullname,
+            'email' => $email,
+            'phone' => $phone,
+            'active' => $active,
+            'description' => $description
+        ]);
+        if($request->all()){
+            return redirect()->route('users.index')->with('success',"Update user successfully!");
+        }
     }
 
     /**
