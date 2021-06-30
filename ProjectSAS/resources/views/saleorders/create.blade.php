@@ -74,7 +74,7 @@ date_default_timezone_set("Asia/Bangkok");
                         @endforeach
                     </div>
                 </div>
-                <!-- Modal Customers -->
+                {{-- Modal Customers --}}
                 <div class="modal fade" id="cusModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                     <div class="modal-dialog modal-xl" role="document">
                         <div class="modal-content">
@@ -161,9 +161,9 @@ date_default_timezone_set("Asia/Bangkok");
                 </div>
             </div>
 
-            <!-- Product Modal -->
+            {{-- Product Modal --}}
             <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog  modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Product List</h5>
