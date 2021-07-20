@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountRequest;
+use App\Statistical;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,7 +27,7 @@ class AccountController extends Controller
                 case("LO1"):
                 case("HR1"):
                 case("AC1"):
-                    return redirect()->route('users.index');
+                    return redirect()->route('home');
                 break;
                 case("SA2"):
                 case("LO2"):
@@ -34,7 +36,7 @@ class AccountController extends Controller
                     return redirect()->route('home');
                 break;
             default:
-            return view('welcome');
+            return redirect()->route('home');
             }
         }
         else{
@@ -47,5 +49,22 @@ class AccountController extends Controller
     {
         $request->session()->invalidate();
         return redirect('login');
+    }
+
+    public function days_order(){
+        $sub30days = Carbon::now('Asia/Ho_Chi_Minh')->subDays(30)->toDateString();
+        $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
+        $get = Statistical::whereBetween('order_date',[$sub30days,$now])->orderBy('order_date' , 'ASC')->get();
+
+        foreach($get as $key => $val){
+            $chart_data[] = array(
+                'period' => $val->order_date,
+                'order' => $val->total_order,
+                'sales' => $val->sales,
+                'profit' => $val->profit,
+                'quantity' => $val->quantity
+            );
+        }
+        echo $data =  json_encode($chart_data);
     }
 }

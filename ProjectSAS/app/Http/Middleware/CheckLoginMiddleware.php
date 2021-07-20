@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
+date_default_timezone_set("Asia/Bangkok");
+
 class CheckLoginMiddleware
 {
     /**

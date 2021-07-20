@@ -1,23 +1,36 @@
 @extends('layouts.dashboard')
 @section('title')
-    @if($isUpdate)
-        {{ $isUpdate }} User
-    @else
-        New User
-    @endif
-    @endsection
+@if($isUpdate)
+{{ $isUpdate }} User
+@else
+New User
+@endif
+@endsection
 @section('content')
 
 @php
 $department = $isUpdate ? substr($users->role,0,-1) : '';
 $admin = $isUpdate ? substr($users->role,-1) : '2';
 $active = $isUpdate ? $users->active : '1';
-
-
 @endphp
 
+{{-- @if (count($errors) > 0)
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif --}}
+
 <div class="card">
-    <form method="POST" action="{{ $isUpdate ? '/users/update' : '' }}">
+    <form method="POST">
         @csrf
         <div class="card-body">
             <div class="row">
@@ -31,7 +44,6 @@ $active = $isUpdate ? $users->active : '1';
                     </strong>
                 </div>
 
-
                 <div class="form-group col-md-6">
                     <label for="username" class="form-control-label">Username</label>
                     <div class="input-group input-group-merge ">
@@ -40,8 +52,12 @@ $active = $isUpdate ? $users->active : '1';
                                 <i class="fa fa-user"></i>
                             </span>
                         </div>
-                        <input class="form-control" placeholder="Enter Username" name="username" id="username" value="{{ $isUpdate ? $users->userName : '' }}">
+                        <input class="form-control" placeholder="Enter Username" name="username" id="username"
+                            value="{{ $isUpdate ? $users->userName : old('username') }}">
                     </div>
+                    @error('username')
+                        <p class="text-danger"><strong>{{$message}}</strong></p>
+                    @enderror
                 </div>
 
                 {{-- Email --}}
@@ -54,22 +70,39 @@ $active = $isUpdate ? $users->active : '1';
                                 <i class="fa fa-envelope"></i>
                             </span>
                         </div>
-                        <input type="email" class="form-control" placeholder="Enter Email" name="email" id="email" value="{{ $isUpdate ? $users->email : '' }}">
+                        <input type="text" class="form-control" placeholder="Enter Email" name="email" id="email"
+                            value="{{ $isUpdate ? $users->email : old('email') }}">
                     </div>
+                    @error('email')
+                        <p class="text-danger"><strong>{{$message}}</strong></p>
+                    @enderror
                 </div>
 
                 {{-- Password --}}
                 <div class="form-group col-md-12">
                     <label for="password" class="form-control-label">Password</label>
-
-                    <div class="input-group input-group-merge ">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="fa fa-lock"></i>
-                            </span>
+                    @if ($isUpdate)
+                        <div class="proDiv col-md-6 pl-0">
+                            <button type="button" style="width: 100%; white-space: normal;" class="btn btn-outline-primary"
+                                data-toggle="modal" data-target="#changePass">
+                                <span>Change Password</span>
+                            </button>
                         </div>
-                        <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password" value="{{ $isUpdate ? $users->password : '' }}">
-                    </div>
+                    @else
+                        <div class="input-group input-group-merge ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Enter Password" name="password"
+                                id="password" value="{{ $isUpdate ? $users->password : '' }}">
+                        </div>
+                    @error('password')
+                        <p class="text-danger"><strong>{{$message}}</strong></p>
+                    @enderror
+                    @endif
+
                 </div>
 
                 {{-- Full name --}}
@@ -81,8 +114,12 @@ $active = $isUpdate ? $users->active : '1';
                                 <i class="fa fa-user-circle" aria-hidden="true"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Enter Fullname" name="fullname" id="fullname" value="{{ $isUpdate ? $users->fullname : '' }}">
+                        <input type="text" class="form-control" placeholder="Enter Fullname" name="fullname"
+                            id="fullname" value="{{ $isUpdate ? $users->fullname : old('fullname') }}">
                     </div>
+                    @error('fullname')
+                        <p class="text-danger"><strong>{{$message}}</strong></p>
+                    @enderror
                 </div>
 
                 <div class="form-group col-md-6">
@@ -114,13 +151,17 @@ $active = $isUpdate ? $users->active : '1';
                                 <i class="fa fa-phone"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Enter Phone" name="phone" id="phone" value="{{ $isUpdate ? $users->phone : '' }}">
+                        <input type="text" class="form-control" placeholder="Enter Phone" name="phone" id="phone"
+                            value="{{ $isUpdate ? $users->phone : old('phone') }}">
                     </div>
+                    @error('phone')
+                        <p class="text-danger"><strong>{{$message}}</strong></p>
+                    @enderror
                 </div>
                 {{-- Description --}}
                 <div class="form-group col-md-12">
                     <label for="description" class="form-control-label">Description</label>
-                    <textarea class="form-control" placeholder="Enter description" name="description" id="description" value="{{ $isUpdate ? $users->description : ''}}"></textarea>
+                    <textarea class="form-control" placeholder="Enter description" name="description" id="description">{{ $isUpdate ? $users->description : old('description')}}</textarea>
                 </div>
                 {{-- Admin --}}
                 <div class="form-group col-md-6">
@@ -143,13 +184,16 @@ $active = $isUpdate ? $users->active : '1';
                         <div data-toggle="buttons" class="btn-group btn-group-toggle radio">
                             <label class="btn btn-success @if($active==1 ) focus active @endif">
                                 Active
-                                <input type="radio" name="active" id="active-1" value="1" @if($active==1)checked @endif></label>
+                                <input type="radio" name="active" id="active-1" value="1" @if($active==1)checked
+                                    @endif></label>
                             <label class="btn btn-danger @if($active==2 ) focus active @endif">
                                 Inactive
-                                <input type="radio" name="active" id="active-2" value="2" @if($active==2)checked @endif></label>
+                                <input type="radio" name="active" id="active-2" value="2" @if($active==2)checked
+                                    @endif></label>
                             <label class="btn btn-warning @if($active==3 ) focus active @endif">
                                 Block
-                                <input type="radio" name="active" id="active-3" value="3" @if($active==3)checked @endif></label>
+                                <input type="radio" name="active" id="active-3" value="3" @if($active==3)checked
+                                    @endif></label>
                         </div>
                     </div>
                 </div>
@@ -159,9 +203,9 @@ $active = $isUpdate ? $users->active : '1';
         <div class="card-footer">
             <div class="row save-buttons">
                 <div class="col-md-12">
-                    <a href="/users/index" class="btn btn-primary">Cancel</a>
-                    <button type="reset" class="btn btn-icon btn-danger">Clear</button>
-                    <button type="submit" class="btn btn-icon btn-success">Submit</button>
+                    <a href="/users/index" class="btn btn-success">Cancel</a>
+                    <button type="reset" class="btn btn-danger">Reset</button>
+                    <button type="submit" class="btn btn-info">Save</button>
                 </div>
 
             </div>
@@ -169,5 +213,75 @@ $active = $isUpdate ? $users->active : '1';
 
     </form>
 </div>
+@if ($isUpdate)
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePass" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/users/update/password/{{ $users->userID }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <label for="oldPassword" class="form-control-label">Old Password</label>
+                        <div class="input-group input-group-merge ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-unlock"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Enter Old Password"
+                                name="oldPassword" id="oldPassword">
+                        </div>
+                        @error('oldPassword')
+                            <p class="text-danger"><strong>{{$message}}</strong></p>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="password" class="form-control-label">New Password</label>
+                        <div class="input-group input-group-merge ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Enter New Password"
+                                name="password" id="password">
+                        </div>
+                        @error('password')
+                            <p class="text-danger"><strong>{{$message}}</strong></p>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="password_confirmation" class="form-control-label">Confirm New
+                            Password</label>
+                        <div class="input-group input-group-merge ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-user-lock"></i>
+                                </span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Confirm New Password"
+                                name="password_confirmation" id="password_confirmation">
+                        </div>
+                        @error('password_confirmation')
+                            <p class="text-danger"><strong>{{$message}}</strong></p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
 
+        </div>
+    </div>
+</div>
+@endif
 @endsection

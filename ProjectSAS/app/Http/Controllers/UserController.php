@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\UsersRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -35,7 +37,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsersRequest $request)
     {
         $username = $request->input('username');
         $password = $request->input('password');
@@ -71,7 +73,7 @@ class UserController extends Controller
     {
         $users = DB::table('users')->where(['userID'=>$id])->first();
         return view('users.create')->with([
-            'isUpdate' => 'Show',
+            'isUpdate' => 'Profile',
             'users' => $users
         ]);
     }
@@ -84,7 +86,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $users = DB::table('users')->where(['userID'=>$id])->first();
+        $users = DB::table('users')
+            ->where(['userID'=>$id])->first();
         return view('users.create')->with([
             'isUpdate' => 'Update',
             'users' => $users
@@ -98,11 +101,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(UsersRequest $request)
     {
         $userID = $request->input('userID');
         $username = $request->input('username');
-        $password = $request->input('password');
         $admin = $request->input('admin')==1 ? 1 : 2;
         $role = $request->input('department') . $admin;
         $fullname = $request->input('fullname');
@@ -114,7 +116,6 @@ class UserController extends Controller
         ->where('userID', intval($userID))
         ->update([
             'userName' => $username,
-            'password' => $password,
             'role' => $role,
             'fullname' => $fullname,
             'email' => $email,
@@ -122,6 +123,27 @@ class UserController extends Controller
             'active' => $active,
             'description' => $description
         ]);
+        if($request->all()){
+            return redirect()->route('users.index')->with('success',"Update user successfully!");
+        }
+    }
+
+    public function updatePassword(ChangePasswordRequest $request, $id)
+    {
+        // $this->validate($request, [
+        //     'oldPassword' => 'required',
+        //     'password' => 'required|confirmed|min:6',
+        //     'password_confirmation' => 'min:6'
+        // ]);
+        $oldPassword = $request->input('oldPassword');
+        $password = $request->input('password');
+
+        $users = DB::table('users')->where('userID', intval($id));
+        if($oldPassword == $users->first()->password){
+            $users->update(['password' => $password]);
+        }else{
+            return back()->withInput()->withErrors("Wrong old password! Please input old password again!");
+        }
         if($request->all()){
             return redirect()->route('users.index')->with('success',"Update user successfully!");
         }
@@ -135,6 +157,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('users')->where('userID', intval($id))->delete();
+        return redirect()->route('users.index')->with('success',"Delete user successfully!");
     }
 }

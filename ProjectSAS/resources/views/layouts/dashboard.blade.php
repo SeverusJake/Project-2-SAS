@@ -10,7 +10,7 @@
     <title>@yield('title')</title>
 
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css">
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('img/logo.jpg') }}" type="image/png">
@@ -44,24 +44,12 @@
             <div class="sidenav-header d-flex align-items-center">
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link" href="/home" role="button">
                             <span class="avatar menu-avatar background-unset">
                                 <img class="border-radius-none border-0 mr-3" alt="sas" src="{{ asset('img/logo.jpg') }}">
                             </span>
-                            <span class="nav-link-text long-texts pl-2 mwpx-100">SAS Company</span>
-                            <i class="fas fa-sort-down pl-2"></i>
+                            <span class="nav-link-text long-texts pl-2 mwpx-100">@if(session('user')) {{ session('user')[0]->fullname }}@else Guest @endif</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right menu-dropdown menu-dropdown-width">
-                            <a href="" class="dropdown-item">
-                                <i class="fas fa-building"></i>
-                                <span>SAS Company</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="" class="dropdown-item">
-                                <i class="fas fa-cogs"></i>
-                                <span>Manage Companies</span>
-                            </a>
-                        </div>
                     </li>
                 </ul>
                 <div class="ml-auto left-menu-toggle-position overflow-hidden">
@@ -80,16 +68,27 @@
                 <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                     <!-- Nav items -->
                     <ul class="navbar-nav">
-                        <li class="nav-item"> <a class="nav-link" href="/users/index"><i class="fa fa-tachometer-alt"></i> <span class="nav-link-text">Users</span> </a>
-                        </li>
-                        <li class="nav-item"> <a class="nav-link" href="/products/index"><i class="fa fa-cube"></i>
-                                <span class="nav-link-text">Products</span> </a></li>
-                        <li class="nav-item">
-                        <li class="nav-item"> <a class="nav-link" href="/customers/index"><i class="fa fa-cube"></i>
-                                <span class="nav-link-text">Customers</span> </a></li>
-                        <li class="nav-item">
-                        <li class="nav-item"> <a class="nav-link" href="/vendors/index"><i class="fa fa-cube"></i>
-                                <span class="nav-link-text">Vendors</span> </a></li>
+                        @if (substr(session('user')[0]->role,0,2)=="HR"||substr(session('user')[0]->role,0,2)=="MA")
+                            <li class="nav-item"> <a class="nav-link" href="/users/index"><i class="fa fa-user"></i> <span class="nav-link-text">Users</span> </a>
+                            </li>
+                        @endif
+
+                        @if (substr(session('user')[0]->role,0,2)!="HR")
+                            <li class="nav-item"> <a class="nav-link" href="/products/index"><i class="fa fa-cube"></i>
+                                    <span class="nav-link-text">Products</span></a></li>
+                        @endif
+                        @if (substr(session('user')[0]->role,0,2)=="SA"||substr(session('user')[0]->role,0,2)=="MA"||substr(session('user')[0]->role,0,2)=="AC")
+                            <li class="nav-item"> <a class="nav-link" href="/customers/index"><i class="fa fa-portrait"></i>
+                                    <span class="nav-link-text">Customers</span> </a></li>
+                        @endif
+
+                        @if (substr(session('user')[0]->role,0,2)=="LO"||substr(session('user')[0]->role,0,2)=="MA"||substr(session('user')[0]->role,0,2)=="AC")
+                            <li class="nav-item"> <a class="nav-link" href="/vendors/index"><i class="fa fa-user-tie"></i>
+                                    <span class="nav-link-text">Vendors</span> </a></li>
+                        @endif
+
+
+                        @if (substr(session('user')[0]->role,0,2)!="HR")
                         <li class="nav-item">
                             <a class="nav-link" href="#navbar-sales" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-sales">
                                 <i class="fa fa-money-bill"></i>
@@ -97,13 +96,25 @@
                             </a>
                             <div class="collapse" id="navbar-sales">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item"> <a class="nav-link" href="/saleorders/index"> <span class="nav-link-text">Sale Orders</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href="/invoices/index"> <span class="nav-link-text">Invoices</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href="/receivables/index"> <span class="nav-link-text">Receivalbes</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href="exports"> <span class="nav-link-text">Exports</span> </a></li>
+                                    @if (substr(session('user')[0]->role,0,2)=="SA"||substr(session('user')[0]->role,0,2)=="MA")
+                                        <li class="nav-item"> <a class="nav-link" href="/saleorders/index"> <span class="nav-link-text">Sale Orders</span> </a></li>
+                                    @endif
+
+                                    @if (substr(session('user')[0]->role,0,2)=="AC"||substr(session('user')[0]->role,0,2)=="MA")
+                                        <li class="nav-item"> <a class="nav-link" href="/invoices/index"> <span class="nav-link-text">Invoices</span> </a></li>
+                                        <li class="nav-item"> <a class="nav-link" href="/receivables/index"> <span class="nav-link-text">Receivables</span> </a></li>
+                                    @endif
+
+                                    @if (substr(session('user')[0]->role,0,2)=="LO"||substr(session('user')[0]->role,0,2)=="MA")
+                                        <li class="nav-item"> <a class="nav-link" href="/exports/index"> <span class="nav-link-text">Exports</span> </a></li>
+                                    @endif
                                 </ul>
                             </div>
                         </li>
+                        @endif
+
+
+                        @if (substr(session('user')[0]->role,0,2)!="SA"&&substr(session('user')[0]->role,0,2)!="HR")
                         <li class="nav-item">
                             <a class="nav-link" href="#navbar-purchases" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-purchases">
                                 <i class="fa fa-shopping-cart"></i>
@@ -111,15 +122,29 @@
                             </a>
                             <div class="collapse" id="navbar-purchases">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item"> <a class="nav-link" href="/purchaseorders/index"> <span class="nav-link-text">Purchase Orders</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href="/bills/index"> <span class="nav-link-text">Bills</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href="/payables/index"> <span class="nav-link-text">Payables</span> </a></li>
-                                    <li class="nav-item"> <a class="nav-link" href="/imports/index"> <span class="nav-link-text">Imports</span> </a></li>
+
+                                    @if (substr(session('user')[0]->role,0,2)=="LO"||substr(session('user')[0]->role,0,2)=="MA")
+                                        <li class="nav-item"> <a class="nav-link" href="/purchaseorders/index"> <span class="nav-link-text">Purchase Orders</span> </a></li>
+                                    @endif
+
+                                    @if (substr(session('user')[0]->role,0,2)=="AC"||substr(session('user')[0]->role,0,2)=="MA")
+                                        <li class="nav-item"> <a class="nav-link" href="/bills/index"> <span class="nav-link-text">Bills</span> </a></li>
+                                        <li class="nav-item"> <a class="nav-link" href="/payables/index"> <span class="nav-link-text">Payables</span> </a></li>
+                                    @endif
+
+                                    @if (substr(session('user')[0]->role,0,2)=="LO"||substr(session('user')[0]->role,0,2)=="MA")
+                                        <li class="nav-item"> <a class="nav-link" href="/imports/index"> <span class="nav-link-text">Imports</span> </a></li>
+                                    @endif
 
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-item"> <a class="nav-link" href=""><i class="fa fa-chart-pie"></i> <span class="nav-link-text">Reports</span> </a></li>
+                        @endif
+
+                        @if (substr(session('user')[0]->role,0,2)=="AC"||substr(session('user')[0]->role,0,2)=="MA"||substr(session('user')[0]->role,0,2)=="SA")
+                            <li class="nav-item"> <a class="nav-link" href="/reports/index"><i class="fa fa-chart-pie"></i> <span class="nav-link-text">Reports</span> </a></li>
+                        @endif
+
                     </ul>
                 </div>
             </div>
@@ -130,6 +155,7 @@
         <nav class="navbar navbar-top navbar-expand navbar-dark border-bottom">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    {{--
                     <form class="navbar-search navbar-search-light form-inline mb-0" id="navbar-search-main" autocomplete="off">
                         <div class="form-group mb-0 mr-sm-3">
                             <div class="input-group input-group-alternative input-group-merge">
@@ -139,7 +165,7 @@
                                 <input type="text" name="search" class="form-control" autocomplete="off" placeholder="Search">
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
 
                     <ul class="navbar-nav align-items-center ml-md-auto">
                         <li class="nav-item d-xl-none">
@@ -261,19 +287,12 @@
                                 <div class="dropdown-header noti-title">
                                     <h6 class="text-overflow m-0">Welcome</h6>
                                 </div>
-
-                                <a href="/users/show" class="dropdown-item">
+                                @if(session('user'))
+                                <a href="/users/show/{{ session('user')[0]->userID }}" class="dropdown-item">
                                     <i class="fas fa-user"></i>
                                     <span>Profile</span>
                                 </a>
-
-                                <div class="dropdown-divider"></div>
-
-                                <a href="/users/index" class="dropdown-item">
-                                    <i class="fas fa-users"></i>
-                                    <span>Users</span>
-                                </a>
-
+                                @endif
                                 <div class="dropdown-divider"></div>
 
                                 <a href="/logout" class="dropdown-item">
@@ -341,10 +360,8 @@
 
     {{-- <script src="{{ asset('js/common/items.js?v=2.1.16') }}"></script> --}}
 
-    {{-- <script src="{{ asset('js/common/documents.js?v=2.1.16') }}"></script> --}}
-
-    <script src="{{ asset('vendor/chart.js/dist/Chart.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts-en.min.js" charset=utf-8></script>
+    {{--  <script src="{{ asset('vendor/chart.js/dist/Chart.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts-en.min.js" charset=utf-8></script>  --}}
 
     {{-- Link database --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">

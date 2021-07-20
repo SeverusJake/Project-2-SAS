@@ -24,23 +24,28 @@ class CustomersRequest extends FormRequest
     public function rules()
     {
         return [
-            'customerName' => 'bail|required',
-            'TaxNumber' => 'bail|required',
-            'address'=> 'bail|required',
-            'phone'=> 'bail|required',
-            'email'=> 'bail|required',
-            // 'role'=> 'bail|required',
-            'unpaid'=> 'bail|required',
+            'txtname'=> 'required|bail',
+            'txtaddress'=> 'required|bail',
+            'txtphone'=> 'required|numeric|digits_between:8,10|bail',
+            'txtemail'=> 'required|email|bail',
+            'unpaid'=> 'required|numeric|gte:0|bail'
+
         ];
     }
-    public function messages(){
-        return[
-            'txtname.required'=>'Customer Name cannot be blank',
-            'txtaddress.required'=>'Address cannot be blank',
-            'txtphone.required'=>'Address cannot be blank',
-            'txtphone.digits_between'=>'The phone number should be numeric only and must be between 8 and 10 digits',
-            'txtemail.required'=>'Email cannot be blank',
-            'txtunpaid.required'=>'Unpaid cannot be blank',
+    public function messages()
+    {
+        return [
+            'txtname.required'=> '* Customer Name cannot blank',
+            'txtname.unique'=> '* Customer Name must be unique !',
+            'txtaddress.required'=> '* Customer Address cannot blank',
+            'txtphone.required'=> '* Customer Phone cannot blank',
+            'txtphone.numeric'=> '* Customer Phone must be numeric',
+            'txtphone.digits_between'=> '* Customer Phone should be between 8 to 10 digit',
+            'txtemail.required'=> '* Customer Email cannot blank',
+            'txtemail.email'=> '* Customer Email is invalid !',
+            'unpaid.required'=> '* Customer Unpaid cannot blank',
+            'unpaid.numeric'=> '* Customer Unpaid must be numeric',
+            'unpaid.gte'=> '* Customer Unpaid cannot below 0',
         ];
     }
 }

@@ -1340,7 +1340,7 @@ table .align-items-center td span.badge {
 }
 
 .product-select .item-add-new:hover {
-    background-color: #f6f9fc;
+    background-color: #EEE8FF;
     text-decoration: none;
 }
 
@@ -1695,14 +1695,6 @@ table .align-items-center td span.badge {
     text-align: right;
 }
 
-@media (max-width: 1500px) {
-  @media not all and (min-resolution:.001dpcm) { @media {
-
-    .line-item-content {
-        max-width:223px;
-    }
-}}
-}
 
 @media only screen and (max-width: 600px) {
     .line-item-content {

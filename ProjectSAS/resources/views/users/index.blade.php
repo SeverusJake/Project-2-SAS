@@ -1,26 +1,25 @@
 @extends('layouts.dashboard')
-@section('title', 'Users Management')
+@section('title', 'User List')
 @section('addnew')
 
-<a href="/users/create" class="btn btn-success btn-sm">Add New</a>
+<a href="/users/create" class="btn btn-info btn-sm"><i class="fas fa-plus-square"></i> Add New</a>
 
 @endsection
 
 @section('content')
+@if (Session::has('success'))
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    {{ Session::get('success') }}
+</div>
+@endif
 <div class="card">
-
-    @if (Session::has('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            <span class="sr-only">Close</span>
-        </button>
-        {{ Session::get('success') }}
-    </div>
-    @endif
     <div class="card-body">
 
-        <table id="userTable" border="1">
+        <table id="userTable" class="display">
             <thead>
                 <tr>
                     <th>User ID</th>
@@ -82,15 +81,16 @@
                         Block
                         @break
                         @endswitch
-
+                        {{-- 1:Active, 2:Inactive, 3: Block --}}
                     </td>
-                    <td>
-                        <a href="show/{{ $user->userID }}" class="btn btn-sm btn-info">
-                            <i class="fas fa-info"></i></a>
-                        <a href="edit/{{ $user->userID }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-edit"></i></a>
-                        <a href="delete/{{ $user->userID }}" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i></a>
+                    <td class="text-center">
+                        <div class="row">
+                            <div class="mx-auto"><a href="edit/{{ $user->userID }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-edit"></i></a></div>
+                            <div class="mx-auto"><a href="delete/{{ $user->userID }}"
+                                    class="delete btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i></a></div>
+                        </div>
                     </td>
                 </tr>
                 @endforeach
@@ -112,14 +112,33 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-
-</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
 <script>
     $(document).ready(function() {
         $('#userTable').DataTable();
     });
+</script>
 
+{{--  Delete Alert  --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<script>
+    $(".delete").confirm({
+        title: '<span style="color: red"><i class="fas fa-trash"></i>&nbsp; Delete User</span>',
+        content: "<span style='color: black; font-size: 14px'>Are you sure about delete this User?</span>",
+        type: 'red',
+        typeAnimated: true,
+        buttons: {
+            confirm:{
+                text: 'Yes I am',
+                btnClass: 'btn-red',
+                action: function () {
+                location.href = this.$target.attr('href');
+            }},
+            cancel: function () {
+            }
+        }
+    });
 </script>
 @endsection
